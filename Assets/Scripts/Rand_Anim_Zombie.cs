@@ -6,17 +6,24 @@ public class Rand_Anim_Zombie : MonoBehaviour
 {
     Animator anim;
 
-    // Start is called before the first frame update
+    [SerializeField] private float minChangeInterval = 2f;
+    [SerializeField] private float maxChangeInterval = 5f;
+    private float animChangeTimer;
+
     void Start()
     {
-        //get the animator component attached
         anim = GetComponent<Animator>();
+        animChangeTimer = Random.Range(minChangeInterval, maxChangeInterval);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        int moveIndex = Random.Range(0, 3);
-        anim.SetInteger("MoveIndex", moveIndex);
+        animChangeTimer -= Time.deltaTime;
+        if (animChangeTimer <= 0f)
+        {
+            int moveIndex = Random.Range(0, 3);
+            anim.SetInteger("MoveIndex", moveIndex);
+            animChangeTimer = Random.Range(minChangeInterval, maxChangeInterval);
+        }
     }
 }

@@ -1,35 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEditor;
 
 public class Timer : MonoBehaviour
 {
-    public float time = 0;
+    private float time = 0f;
     [SerializeField] private TextMeshProUGUI timeElement;
-
-    void Start()
-    {
-
-    }
 
     void Update()
     {
-        //incrementing the time
-        time += Time.deltaTime;
-        //displaying the time
-        DisplayTime(time);
+        if (Time.timeScale > 0f)
+        {
+            time += Time.deltaTime;
+            DisplayTime(time);
+        }
     }
 
-    //method to display time on screen
     void DisplayTime(float time)
     {
-        //claculating minutes and seconds from the remaining time 
-        float minutes = Mathf.FloorToInt(time / 60);
-        float seconds = Mathf.FloorToInt(time % 60);
-
-        //displaying the time using text mesh pro
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
         timeElement.text = string.Format("Timer: {0:00}:{1:00}", minutes, seconds);
     }
 }

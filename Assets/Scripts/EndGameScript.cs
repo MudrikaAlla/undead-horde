@@ -16,24 +16,25 @@ public class EndGameScript : MonoBehaviour
         
     }
 
-    //game exit is triggered when player goes near the treasure chest
+    private bool hasWon = false;
+
+    [SerializeField] private float quitDelay = 5f;
+
     private void OnTriggerEnter(Collider other)
     {
+        if (hasWon) return;
+
         if (other.gameObject.CompareTag("Maria"))
         {
-            //plays the audio attached to the treasure chest
+            hasWon = true;
             win.Play();
-            //Debug.Log("WIN!");
-            StartCoroutine(DelayLittle());
+            StartCoroutine(WaitAndQuit());
         }
     }
 
-    //method to delay exiting the game by five seconds
-    IEnumerator DelayLittle()
+    IEnumerator WaitAndQuit()
     {
-        //https://forum.unity.com/threads/c-how-to-close-the-game-after-x-seconds.525693/
-        yield return new WaitForSeconds(5); //wait 5 secconds
-        Debug.Log("Yay");
+        yield return new WaitForSeconds(quitDelay);
         Application.Quit();
     }
 }

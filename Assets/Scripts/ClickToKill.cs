@@ -6,30 +6,36 @@ public class ClickToKill : MonoBehaviour
 {
     Animator anim;
     AudioSource slash;
-    // Start is called before the first frame update
+    private float attackSoundCooldown;
+    private float cooldownTimer;
+
     void Start()
     {
         anim = GetComponent<Animator>();
-
-        //getting audio source attached to Maria
         slash = GetComponent<AudioSource>();
+
+        // Use the slash clip length as cooldown so sound replays each animation loop
+        attackSoundCooldown = slash.clip != null ? slash.clip.length : 0.5f;
     }
 
     void Update()
     {
-        //if user clicks K, Maria slashes her sword. this animation is triggered by a boolean parameter kill
         if (Input.GetKey(KeyCode.K))
         {
-            //setting the kill parameter true, triggering slash animation of Maria
             anim.SetBool("Kill", true);
 
-            //play sound attached to Maria
-            slash.Play();
+            cooldownTimer -= Time.deltaTime;
+            if (cooldownTimer <= 0f)
+            {
+                slash.Play();
+                cooldownTimer = attackSoundCooldown;
+            }
         }
-        
+
         if (Input.GetKeyUp(KeyCode.K))
         {
             anim.SetBool("Kill", false);
+            cooldownTimer = 0f; // Reset so next press plays immediately
         }
     }
 }

@@ -23,15 +23,30 @@ public class ZombieDeath : MonoBehaviour
 
     }
 
-    //method to kill the zombie(execute dying animation) when sword touches the zombie
+    private bool isDead = false;
+
     private void OnTriggerEnter(Collider other)
     {
+        if (isDead) return;
+
         if (other.gameObject.CompareTag("Sword"))
         {
-            //play the audio attached to the zombie
-            growl.Play();
-            Debug.Log("Sword Touched");
+            isDead = true;
+
+            if (growl != null && growl.clip != null)
+            {
+                growl.Play();
+            }
+            else
+            {
+                Debug.LogWarning($"[ZombieDeath] {gameObject.name}: AudioSource or clip is missing!");
+            }
+
             anim.SetTrigger("Dead");
+
+            // Disable collider so zombie can't be hit again
+            Collider col = GetComponent<Collider>();
+            if (col != null) col.enabled = false;
         }
     }
 }
