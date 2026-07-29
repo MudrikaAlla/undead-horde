@@ -41,3 +41,13 @@ crashlytics-build.properties
 
 # Asset Store cache
 sysinfo.txt
+
+# Unity mis-imported project folders
+Assets/Assets.meta
+Assets/Assets.sln.meta
+Assets/Logs.meta
+Assets/Packages.meta
+Assets/Packages/
+Assets/ProjectSettings.meta
+Assets/ProjectSettings/
+Assets/UserSettings.meta

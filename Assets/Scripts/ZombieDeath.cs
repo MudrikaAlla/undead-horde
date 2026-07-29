@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class ZombieDeath : MonoBehaviour
 {
-    //GameObject currentGameObject;
     Animator anim;
     AudioSource growl;
+    private KillCounter killCounter;
 
     void Start()
     {
         //currentGameObject = this.gameObject;
-        //getting animator component attached to the zombie
         anim = GetComponent<Animator>();
-
-        //getting the audio source from the zombie
         growl = GetComponent<AudioSource>();
+        killCounter = FindObjectOfType<KillCounter>();
     }
 
     void Update()
@@ -44,9 +42,10 @@ public class ZombieDeath : MonoBehaviour
 
             anim.SetTrigger("Dead");
 
-            // Disable collider so zombie can't be hit again
             Collider col = GetComponent<Collider>();
             if (col != null) col.enabled = false;
+
+            if (killCounter != null) killCounter.RegisterKill();
         }
     }
 }
