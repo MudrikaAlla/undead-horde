@@ -46,6 +46,8 @@ public class ZombieDeath : MonoBehaviour
             if (col != null) col.enabled = false;
 
             if (killCounter != null) killCounter.RegisterKill();
+
+            if (CinemachineShake.Instance != null) CinemachineShake.Instance.Shake();
         }
     }
 }
