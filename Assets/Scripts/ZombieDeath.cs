@@ -1,53 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ZombieDeath : MonoBehaviour
 {
     Animator anim;
     AudioSource growl;
-    private KillCounter killCounter;
+    KillCounter killCounter;
+    Health health;
 
     void Start()
     {
-        //currentGameObject = this.gameObject;
         anim = GetComponent<Animator>();
         growl = GetComponent<AudioSource>();
         killCounter = FindObjectOfType<KillCounter>();
+        health = GetComponent<Health>();
+
+        // Subscribe to the Health component's death event
+        health.OnDeath += HandleDeath;
     }
 
-    void Update()
+    void OnDestroy()
     {
-
+        // Always unsubscribe to prevent memory leaks
+        if (health != null) health.OnDeath -= HandleDeath;
     }
 
-    private bool isDead = false;
-
-    private void OnTriggerEnter(Collider other)
+    void HandleDeath()
     {
-        if (isDead) return;
+        if (growl != null && growl.clip != null)
+            growl.Play();
 
-        if (other.gameObject.CompareTag("Sword"))
-        {
-            isDead = true;
+        anim.SetTrigger("Dead");
 
-            if (growl != null && growl.clip != null)
-            {
-                growl.Play();
-            }
-            else
-            {
-                Debug.LogWarning($"[ZombieDeath] {gameObject.name}: AudioSource or clip is missing!");
-            }
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
 
-            anim.SetTrigger("Dead");
-
-            Collider col = GetComponent<Collider>();
-            if (col != null) col.enabled = false;
-
-            if (killCounter != null) killCounter.RegisterKill();
-
-            if (CinemachineShake.Instance != null) CinemachineShake.Instance.Shake();
-        }
+        if (killCounter != null) killCounter.RegisterKill();
+        if (CinemachineShake.Instance != null) CinemachineShake.Instance.Shake();
     }
 }
